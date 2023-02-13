@@ -16,6 +16,7 @@ class TasksController extends Controller
     public function index()
     {
         $arrTask = Task::all()->sortBy('id');
+       // Alert::success('welcome');
         return view('tasks.index',compact('arrTask'));
     }
 
@@ -128,8 +129,7 @@ class TasksController extends Controller
     public function destroy($id)
     { 
         Task::find($id)->delete();
-        Alert::success('Task  Successfully Deleted');
-        return redirect()->back();
+        return json_encode('success delete');
     }
 
 

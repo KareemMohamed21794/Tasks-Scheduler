@@ -23,7 +23,7 @@
 					  </thead>
 					  <tbody>
 					  	@foreach($arrTask as $key=> $objTask)
-					    <tr>
+					    <tr id="tr_{{$objTask->id}}">
 					      <th scope="row">{{$key+1}}</th>
 					      <td>
 					      	<div class="form-check form-switch">
@@ -34,10 +34,16 @@
 					      <td>{{$objTask->name}}</td>
 					      <td>{{$objTask->task_url}}</td>
 					      <td><a href="{{ route('tasks.edit', $objTask->id) }}"><button type="button" class="btn btn-info">Edit</button></a></td>
-					      <td>
+					     {{--  <td>
 		                    {!!Form::open(["url"=>"tasks/$objTask->id","method"=>"DELETE","onclick"=>"return confirm('Are U Sure To Delete !!')"])!!}
 		                    <button type="submit" class="btn btn-danger">Delete</button>
 		                    {!! Form::close() !!}
+		                  </td> --}}
+
+		                   <td>
+		                   
+		                    <button type="submit" onclick="Delete({{$objTask->id}})" class="btn btn-danger">Delete</button>
+		                    
 		                  </td>
 
 		                  <td ><a href="{{ url('task_history') }}/{{$objTask->id}}"><button type="button" class="btn btn-primary">History</button></a></td>
@@ -61,7 +67,6 @@
 <script type="text/javascript">
 	function Enable_Disable(task_id) {
 
-		
 		var url = "<?php echo url(''); ?>";
 		if($('#radio_button').is(':checked')){
             var status = 1;
@@ -69,44 +74,82 @@
 			var status = 0;
 		}
 
-		if(status == 1){
-			var response = confirm("Are you sure you want to Enable Task?");
-		}else if(status == 0){
-			var response = confirm("Are you sure you want to Disable Task?");
-			
-		}
-		
-
-		if (response) {
-		    // add code if the user pressed the Ok button
-		    console.log("Ok was pressed");
-		} else {
-		    // add code if the user pressed the Cancel button
-		    if(status == 0){
-				$("#radio_button").prop( "checked", true );
-			}else if(status == 1){
-				$("#radio_button").prop( "checked", false );
-			}
-		    console.log("Cancel was pressed");
-		    console.log(status);
-		    return false;
-		}
-
-
-		$.ajax({
-		    type: "GET",
-		    url: url+'/update_status_task',
-		    data: {status: status,task_id:task_id},
-		    headers: {
-    		'X-CSRF-TOKEN': $('meta[name_1="csrf-token"]').attr('content')
-  			},
-	 	    success: function( data ) {
-	 	    	
-	 	    	data = jQuery.parseJSON(data);
-	 	    	console.log(data);
-	 	    	
-		    }
+		Swal.fire({
+		  title: 'Do you want to save the changes?',
+		  showDenyButton: true,
+		 // showCancelButton: true,
+		  confirmButtonText: 'Save',
+		  denyButtonText: `Don't save`,
+		}).then((result) => {
+		  /* Read more about isConfirmed, isDenied below */
+		  if (result.isConfirmed) {
+		    Swal.fire('Saved!', '', 'success');
+			    $.ajax({
+			    type: "GET",
+			    url: url+'/update_status_task',
+			    data: {status: status,task_id:task_id},
+			    headers: {
+	    		'X-CSRF-TOKEN': $('meta[name_1="csrf-token"]').attr('content')
+	  			},
+		 	    success: function( data ) {
+		 	    	
+		 	    	data = jQuery.parseJSON(data);
+		 	    	console.log(data);
+		 	    	
+			    }
+			});
+		  } else if (result.isDenied) {
+		  	 if(status == 0){
+					$("#radio_button").prop( "checked", true );
+				}else if(status == 1){
+					$("#radio_button").prop( "checked", false );
+				}
+		    Swal.fire('Changes are not saved', '', 'info')
+		  }
 		});
+
+
+		
+	}
+
+
+	function Delete(id) {
+		var url = "<?php echo url(''); ?>";
+		
+		Swal.fire({
+		  title: 'Do you want to Delete ?',
+		  showDenyButton: true,
+		 // showCancelButton: true,
+		  confirmButtonText: 'Delete',
+		  denyButtonText: `Don't Delete`,
+		}).then((result) => {
+		  /* Read more about isConfirmed, isDenied below */
+		  if (result.isConfirmed) {
+		    Swal.fire('Delete!', '', 'success');
+			    $.ajax({
+			    type: "DELETE",
+			    url: url+'/tasks/'+id,
+			    data: {
+		        "_token": "{{ csrf_token() }}",
+		        "id": id
+		        },
+		 	    success: function( data ) {
+		 	    	
+		 	    	data = jQuery.parseJSON(data);
+		 	    	console.log(data);
+		 	    	$("#tr_"+id).remove();
+		 	    	
+			    }
+			});
+
+	  } else if (result.isDenied) {
+	  	 
+	    Swal.fire('Data did not Deleted', '', 'info');
+	    return false;
+	  }
+		});
+
+		
 	}
 </script>
 @endsection

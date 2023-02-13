@@ -21,7 +21,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index']);
 Route::get('send-email', [HomeController::class, 'SendEmail']);
 Route::resource('tasks', TasksController::class);
 Route::get('update_status_task', [TasksController::class, 'UpdateStatusTask']);
