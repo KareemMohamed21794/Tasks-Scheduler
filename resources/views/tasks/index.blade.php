@@ -4,34 +4,12 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-        	@if (\Session::has('success'))
-				<div class="alert alert-success">
-			        <ul>
-			            <li>{!! \Session::get('success') !!}</li>
-			        </ul>
-				</div>
-		    @endif
-
-		    @if (\Session::has('edit'))
-			    <div class="alert alert-success">
-			        <ul>
-			            <li>{!! \Session::get('edit') !!}</li>
-			        </ul>
-			    </div>
-			@endif
-
-    	    @if (\Session::has('delete'))
-			    <div class="alert alert-success">
-			        <ul>
-			            <li>{!! \Session::get('delete') !!}</li>
-			        </ul>
-			    </div>
-			@endif
-            <div class="card">
+        	
+            <div class="row justify-content-center">
                 <div class="card-header"> <a href="{{url('tasks/create')}}"><button type="button" class="btn btn-primary">{{ __('Add Tasks Scheduler') }}</button></a></div>
-                
-                <div class="card-body">
-                   <table class="table">
+                @if(count($arrTask) > 0)
+                <div class="col-md-12">
+                   <table class="table table-hover">
 					  <thead>
 					    <tr>
 					      <th scope="col">#</th>
@@ -62,25 +40,59 @@
 		                    {!! Form::close() !!}
 		                  </td>
 
-		                  <td><a href="{{ url('task_history') }}/{{$objTask->id}}"><button type="button" class="btn btn-primary">History</button></a></td>
+		                  <td ><a href="{{ url('task_history') }}/{{$objTask->id}}"><button type="button" class="btn btn-primary">History</button></a></td>
 
 					    </tr>
 					    @endforeach
 					  </tbody>
 					</table>
                 </div>
+                @else
+                <div class="card-body">
+                 <div class="card-header" style="text-align: center;font-size:20px;font-weight: bold;"> {{ __('No data') }}</div>
+                </div>
+                @endif
             </div>
         </div>
     </div>
+
 </div>
 
 <script type="text/javascript">
 	function Enable_Disable(task_id) {
-		var status = 0;
+
+		
 		var url = "<?php echo url(''); ?>";
 		if($('#radio_button').is(':checked')){
-          status = 1;
+            var status = 1;
+		}else{
+			var status = 0;
 		}
+
+		if(status == 1){
+			var response = confirm("Are you sure you want to Enable Task?");
+		}else if(status == 0){
+			var response = confirm("Are you sure you want to Disable Task?");
+			
+		}
+		
+
+		if (response) {
+		    // add code if the user pressed the Ok button
+		    console.log("Ok was pressed");
+		} else {
+		    // add code if the user pressed the Cancel button
+		    if(status == 0){
+				$("#radio_button").prop( "checked", true );
+			}else if(status == 1){
+				$("#radio_button").prop( "checked", false );
+			}
+		    console.log("Cancel was pressed");
+		    console.log(status);
+		    return false;
+		}
+
+
 		$.ajax({
 		    type: "GET",
 		    url: url+'/update_status_task',

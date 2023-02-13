@@ -7,6 +7,9 @@
                 <div class="card-body">
                 	Succesful Send Url: <a href="{{url($task->task_url)}}">{{$task->task_url}}</a>
                 </div>
+                <div class="card-body">
+                    Status: {{$status}}
+                </div>
             </div>
         </div>
     </div>

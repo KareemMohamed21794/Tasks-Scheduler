@@ -9,14 +9,14 @@
                 <div class="card-body">
 
                 	{!! Form::open(['url' => 'tasks' , 'files' => true]) !!}
-					  <div class="form-group">
+					  <div class="mb-3">
 					    <label for="exampleInputEmail1">Task Name</label>
 					    <input type="text" class="form-control" id="exampleInputEmail1" name="name" required value="{{old('name')}}">
 					    @error('name')
                             <div class="text-sm text-red-600">{{ $message }}</div>
                         @enderror
 					  </div>
-					  <div class="form-group">
+					  <div class="mb-3">
 					    <label for="exampleInputPassword1">Task Url</label>
 					    <input type="url" class="form-control" id="exampleInputPassword1" name="task_url" required value="{{old('task_url')}}">
 					    @error('task_url')
@@ -24,7 +24,7 @@
                         @enderror
 					  </div>
 
-					  <div class="form-group">
+					  <div class="mb-3">
 			               <label for="exampleFormControlSelect1">Select Scheduler</label>
 					       <select class="form-control" id="exampleFormControlSelect1" name="task_scheduler" id="task_scheduler" onchange="SelectScheduler(this.value)">
 						      	<option value="0">select scheduler</option>
@@ -44,7 +44,7 @@
                             @enderror
 					  </div>
                       
-					   <div class="form-group" id="every_minute_at">
+					   <div class="mb-3" id="every_minute_at">
 					    <label for="exampleInputPassword1">Every Minute at</label>
 					    <input type="number" class="form-control" max="59" min="0" name="minute" id="minute"  value="{{old('minute')}}">
 					    @error('minute')
@@ -56,7 +56,7 @@
 					
 
 
-					   <div class="form-group" id="every_hour_at">
+					   <div class="mb-3" id="every_hour_at">
 			               <label for="exampleFormControlSelect1">Every Hour at</label>
 			               <input type="time" class="form-control" id="exampleInputEmail1" name="hour"  value="{{old('hour')}}">
 					     

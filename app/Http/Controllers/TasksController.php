@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Task;
+use Http;
+use Alert;
 class TasksController extends Controller
 {
     /**
@@ -54,8 +56,10 @@ class TasksController extends Controller
         $objTask->day_week = 0;
 
         $objTask->save();
+
+        Alert::success('Task Created Successfully');
         
-        return redirect()->route('tasks.index')->with('success', 'Task Created Successfully'); 
+         return redirect()->route('tasks.index');  
     }
 
     /**
@@ -78,6 +82,10 @@ class TasksController extends Controller
     public function edit($id)
     {
         $objTask = Task::find($id);
+        // $response = Http::get($objTask->task_url);
+        // dd($response);
+
+           
         return view('tasks.edit',compact('objTask'));
     }
 
@@ -107,7 +115,8 @@ class TasksController extends Controller
         $objTask->month = 0;
         $objTask->day_week = 0;
         $objTask->save();
-        return redirect()->route('tasks.index')->with('edit', 'Task  Successfully Edit'); 
+        Alert::success('Task  Successfully Edit');
+        return redirect()->route('tasks.index'); 
     }
 
     /**
@@ -119,7 +128,8 @@ class TasksController extends Controller
     public function destroy($id)
     { 
         Task::find($id)->delete();
-        return redirect()->back()->with('delete', 'Task  Successfully Deleted');
+        Alert::success('Task  Successfully Deleted');
+        return redirect()->back();
     }
 
 

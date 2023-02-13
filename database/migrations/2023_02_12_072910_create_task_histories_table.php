@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('task_id');
             $table->string('response');
+            $table->string('body');
             $table->dateTime('date');
             $table->timestamps();
         });
